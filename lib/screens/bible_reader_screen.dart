@@ -119,16 +119,18 @@ class _BibleReaderScreenState extends State<BibleReaderScreen> {
   void showBookAndChapterSelector() {
     // Track selected book for chapter display
     String selectedBook = currentBook;
-    int maxChapters = 50; // Default value, can be updated based on selected book
+    Book? selectedBookObj;
+    int maxChapters = 30; // Default value until we fetch the actual count
     
     showModalBottomSheet(
       backgroundColor: isDarkMode ? Colors.black : Colors.white,
       context: context,
+      isScrollControlled: true, // Makes the modal take up the full screen if needed
       builder: (BuildContext context) {
         return StatefulBuilder(
-          builder: (context, setState) {
+          builder: (context, setModalState) {
             return Container(
-              height: 500,
+              height: MediaQuery.of(context).size.height * 0.7, // 70% of screen height
               child: Column(
                 children: [
                   Padding(
@@ -157,6 +159,19 @@ class _BibleReaderScreenState extends State<BibleReaderScreen> {
                                   itemBuilder: (context, index) {
                                     final book = bookList[index];
                                     final isSelected = selectedBook == book.book;
+                                    
+                                    // Find the initially selected book
+                                    if (isSelected && selectedBookObj == null) {
+                                      selectedBookObj = book;
+                                      // Load chapter count for the initially selected book
+                                      BibleApiService.fetchChapterCount(book.book)
+                                        .then((count) {
+                                          setModalState(() {
+                                            maxChapters = count;
+                                          });
+                                        });
+                                    }
+                                    
                                     return ListTile(
                                       title: Text(
                                         book.bookName,
@@ -169,19 +184,15 @@ class _BibleReaderScreenState extends State<BibleReaderScreen> {
                                           ? (isDarkMode ? Colors.grey[800] : Colors.grey[300]) 
                                           : null,
                                       onTap: () {
-                                        setState(() {
-                                          selectedBook = book.book;
-                                          // You could make an API call here to get the actual max chapters
-                                          // For now we'll use the default or implement a lookup
-                                          switch(book.book) {
-                                            case 'Genesis': maxChapters = 50; break;
-                                            case 'Exodus': maxChapters = 40; break;
-                                            case 'Leviticus': maxChapters = 27; break;
-                                            case 'Numbers': maxChapters = 36; break;
-                                            case 'Deuteronomy': maxChapters = 34; break;
-                                            default: maxChapters = 25; break; // Default for other books
-                                          }
-                                        });
+                                        // Update selected book and fetch chapter count
+                                        BibleApiService.fetchChapterCount(book.book)
+                                          .then((count) {
+                                            setModalState(() {
+                                              selectedBook = book.book;
+                                              selectedBookObj = book;
+                                              maxChapters = count;
+                                            });
+                                          });
                                       },
                                     );
                                   },
@@ -196,7 +207,9 @@ class _BibleReaderScreenState extends State<BibleReaderScreen> {
                         ),
                         // Chapter Selector
                         Expanded(
-                          child: GridView.builder(
+                          child: selectedBookObj == null 
+                          ? Center(child: Text('Select a book'))
+                          : GridView.builder(
                             padding: EdgeInsets.all(16.0),
                             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 4,
@@ -214,6 +227,7 @@ class _BibleReaderScreenState extends State<BibleReaderScreen> {
                                   // Update global state when selecting a chapter
                                   this.setState(() {
                                     currentBook = selectedBook;
+                                    selectedBookName = selectedBookObj?.bookName;
                                     currentChapter = chapterNum;
                                     loadVerses();
                                   });
