@@ -1,0 +1,139 @@
+Great, Sam. Let's **go all in** on building your **Distraction-Free Bible Reading App**. We'll name it for now as:
+
+> 🕊️ **"Sacred Start"** – Start your day with the Word, not the world.
+
+---
+
+## ✅ Phase 1 Goal: Minimum Viable Product (MVP)
+
+**Timeframe**: 30 days (Daily 2-hour commitment)
+
+We'll break it down week-by-week and provide file names and tasks.
+
+---
+
+### 🧱 Week 1: App Skeleton + Bible Reader UI
+
+**🗂️ Files:**
+
+* `main.dart`
+* `screens/home_screen.dart`
+* `screens/bible_reader_screen.dart`
+* `data/bible_data.dart`
+* `services/reading_progress_service.dart`
+
+**🔨 Tasks:**
+
+* Set up Flutter project: `flutter create sacred_start`
+* Load Bible chapters (use JSON for now, e.g., Genesis 1–3).
+* Create a Bible reading screen with:
+
+  * Chapter navigation.
+  * Last read saved in local storage.
+* Build home screen with:
+
+  * “Start Reading” button.
+  * “Church Mode” toggle (initially just UI).
+* Use `shared_preferences` package to store reading progress.
+
+---
+
+### 🚫 Week 2: Lockdown Mode + Notification Blocker
+
+**🗂️ Files:**
+
+* `services/lockdown_service.dart`
+* `screens/lockdown_config_screen.dart`
+
+**🔨 Tasks:**
+
+* Ask for:
+
+  * Usage Access Permission
+  * DND access
+* Build Lockdown Timer (e.g., 6:00 AM–6:30 AM)
+* Block apps by:
+
+  * Getting foreground apps
+  * Overlaying blocking screen (needs Accessibility Service)
+* Hide notifications during lockdown using DND mode
+
+---
+
+### 🔁 Week 3: Reminder System + Gamification
+
+**🗂️ Files:**
+
+* `services/reminder_service.dart`
+* `widgets/streak_widget.dart`
+* `models/streak_model.dart`
+
+**🔨 Tasks:**
+
+* Add local notifications using `flutter_local_notifications`.
+* Build streak system:
+
+  * Daily check-in = +1 streak.
+  * Missed = streak reset (optional grace).
+* Show motivational message after reading.
+
+---
+
+### 🙏 Week 4: Church Mode + Final Polish
+
+**🗂️ Files:**
+
+* `services/church_mode_service.dart`
+* `screens/settings_screen.dart`
+
+**🔨 Tasks:**
+
+* Toggle to activate “Church Mode”:
+
+  * DND + screen timeout + hide distracting apps.
+  * Optional: schedule (e.g., every Sunday 9 AM–12 PM)
+* Add settings screen to customize:
+
+  * Whitelisted apps
+  * Plan type (NT only / Whole Bible / Custom)
+
+---
+
+## 🗂️ Bible Data (Plan Suggestion)
+
+### Format: `assets/plans/daily_plan.json`
+
+```json
+[
+  { "day": 1, "book": "Genesis", "chapter": 1 },
+  { "day": 2, "book": "Genesis", "chapter": 2 },
+  ...
+]
+```
+
+We'll create a parser to display today’s reading and track progress.
+
+---
+
+## 🧠 Skills You’ll Learn
+
+* Flutter + State Management
+* Using Android Permissions (advanced like Usage Access)
+* Local data persistence
+* Scheduling notifications
+* Blocking logic (Accessibility APIs)
+
+---
+
+## ⚡️ Want me to generate project structure with boilerplate code (week 1)?
+
+I'll generate:
+
+* `main.dart`
+* Basic routing
+* JSON data format for Bible
+* Reading screen UI
+
+**Just reply:** “Yes, start with week 1 code”.
+
+We'll go **step by step** and you'll build a beautiful, purpose-driven app by the end of the month.
